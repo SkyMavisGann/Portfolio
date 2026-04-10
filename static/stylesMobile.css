@@ -1,0 +1,80 @@
+/* =========================================
+   MOBILE OVERRIDES (Max Width 768px)
+========================================= */
+@media (max-width: 768px) {
+    
+    /* 1. Fix the White Gap */
+    /* Mobile browsers have a collapsing URL bar that messes up '100vh'. 
+       '100svh' tells it to strictly use the small viewport. */
+    .parallax-container {
+        height: 100svh; 
+    }
+    html, body {
+        background-color: #1a1a1a; /* Prevents any default white from bleeding through */
+    }
+
+    /* 2. Shrink the Typography & Billboards */
+    .billboard-sign {
+        padding: 1rem; 
+        background-size: 100% 100%; 
+        width: 90%; /* Let it shrink on small screens */
+    }
+    .billboard-sign h2 { font-size: 2rem; }
+    .billboard-sign h3 { font-size: 1.5rem; }
+    #main-title { font-size: 3rem; }
+
+    /* 3. Rebuild the Grid for 1 Column */
+    .projects-grid {
+        grid-template-columns: 1fr; /* Forces exactly 1 card per row */
+        padding: 1rem; /* Removes the massive 6rem side margins */
+        gap: 3rem;
+    }
+
+    /* 4. Shrink the Cards so the Pistons stay on screen */
+    .piston-card-wrapper {
+        max-width: 250px; /* Shrinks the card so the 96px side pistons have room */
+    }
+    .projects-grid img {
+        width: 100%; /* Ensures the screenshot fits inside the newly shrunk card */
+    }
+    
+    /* Shrink the gear containers so they don't block the screen */
+    .top-gear-container, .bottom-gear-container {
+        transform: scale(0.6);
+        transform-origin: right edge;
+    }
+
+    /* Hovering ON OR Scrolled Into View (Piston Extends) */
+    .piston-card-wrapper:hover .piston-sprite,
+    .piston-card-wrapper.is-visible .piston-sprite {
+        animation: extend-piston 0.4s steps(5) forwards;
+    }
+
+    .piston-card-wrapper:hover .piston-spriteRight,
+    .piston-card-wrapper.is-visible .piston-spriteRight {
+        animation: extend-piston 0.4s steps(5) forwards;
+    }
+
+    /* Hovering OFF OR Scrolled Out Of View (Piston Retracts) */
+    .piston-card-wrapper:not(:hover):not(.is-visible) .piston-sprite,
+    .piston-card-wrapper:not(:hover):not(.is-visible) .piston-spriteRight {
+        animation: retract-piston 0.4s steps(5) forwards;
+    }
+
+    /* Add the .is-visible hook to all your gear animations too! */
+    .piston-card-wrapper:hover .pistonGear-sprite,
+    .piston-card-wrapper.is-visible .pistonGear-sprite {
+        animation: spin-counterclockwisePiston 0.4s linear forwards;
+    }
+    .piston-card-wrapper:not(:hover):not(.is-visible) .pistonGear-sprite {
+        animation: spin-clockwisePiston 0.4s linear forwards;
+    }
+
+    .piston-card-wrapper:hover .pistonGear-spriteRight,
+    .piston-card-wrapper.is-visible .pistonGear-spriteRight {
+        animation: spin-clockwisePistonRight 0.4s linear forwards;
+    }
+    .piston-card-wrapper:not(:hover):not(.is-visible) .pistonGear-spriteRight {
+        animation: spin-counterclockwisePistonRight 0.4s linear forwards;
+    }
+}
