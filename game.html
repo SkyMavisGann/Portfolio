@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details</title>
+    <link rel="stylesheet" href="static/styles.css">
+    <style>
+        body {
+            background-color: whitesmoke;
+        }
+        /* Specific layout for the Game Details page */
+        .game-container {
+            max-width: 1000px;
+            margin: 150px auto 50px auto; /* Space for the fixed nav */
+            padding: 2rem;
+            background-image: url('static/bluePanel.png');
+            background-size: 500px 500px;
+            border-radius: 0px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 10;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .game-header {
+            text-align: center;
+            text-shadow: 0 4px 0 rgba(0,0,0,0.8); 
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #333;
+            padding-bottom: 1rem;
+        }
+
+        .contributions-section {
+            background-color: rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary-accent);
+            margin: 2rem 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .contributions-section h3 {
+            font-family: 'RainyHearts', sans-serif;
+            text-shadow: 0 4px 0 rgba(0,0,0,0.8); 
+            margin-bottom: 1rem;
+            color: var(--primary-accent);
+        }
+
+        .contributions-list {
+            list-style-type: square;
+            margin-left: 2rem;
+        }
+
+        h2 {
+            font-family: 'RainyHearts', sans-serif;
+            text-shadow: 0 4px 0 rgba(0,0,0,0.8); 
+            margin-top: 3rem; 
+            font-size: 2rem;
+            text-align: center;
+            color: var(--primary-accent);
+        }
+
+        /* Modular Image Gallery */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border: 4px solid #2c3e50;
+            border-radius: 4px;
+            image-rendering: pixelated; /* Keeps your pixel art crisp! */
+            transition: transform 0.2s ease;
+        }
+
+        .gallery-img:hover {
+            transform: scale(1.05);
+        }
+
+        .play-button {
+            display: inline-block;
+            text-decoration: none;
+            color: #111;
+        }
+
+                /* --- Lightbox Mechanics --- */
+        #lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(15, 20, 25, 0.95); /* Heavy, dark industrial backdrop */
+            z-index: 99999; /* Guarantees it sits above the nav bar and audio prompt */
+            
+            /* Flexbox perfectly centers the image */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            /* Hidden by default */
+            opacity: 0;
+            pointer-events: none; /* Prevents it from blocking clicks when invisible */
+            transition: opacity 0.3s ease;
+        }
+
+        /* The class JS will add to turn it on */
+        #lightbox.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #lightbox-img {
+            max-width: 90vw; /* Prevents the image from touching the edges of the screen */
+            max-height: 90vh;
+            border: 4px solid var(--primary-accent);
+            border-radius: 4px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            image-rendering: pixelated;
+            
+            /* A subtle pop-in animation */
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        #lightbox.active #lightbox-img {
+            transform: scale(1);
+        }
+
+        #lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: var(--primary-accent);
+            font-family: 'RainyHearts', sans-serif;
+            font-size: 4rem;
+            cursor: pointer;
+            transition: color 0.2s;
+            user-select: none;
+        }
+
+        #lightbox-close:hover {
+            color: white;
+        }
+        #game-desc {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            padding: 2rem;
+
+            min-height: 240px; /* Forces the element to be tall enough for your image */
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center;
+            background-image: url('static/bluePanelLong.png');
+            background-size: 960px 240px;
+            text-shadow: 0 4px 0 rgba(0,0,0,0.8); 
+            background-position: center;
+            background-repeat: no-repeat;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        #game-info {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            padding: 2rem;
+            font-family: sans-serif;
+
+            min-height: 240px;
+            display: flex; 
+            align-items: left; 
+            justify-content: left; 
+            text-align: left;
+            background-image: url('static/bluePanelTall.png');
+            background-size: 960px auto;
+            background-position: center;
+            background-repeat: no-repeat;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .dynamic-game-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            
+            background-image: url('static/FreeIndustrialZoneTileset/2Background/3.png');
+            background-size: cover; 
+            background-position: center;
+            background-repeat: no-repeat;
+            
+            z-index: -50; 
+
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html#aboutme">About</a>
+        <a href="index.html#published-games">Games</a>
+        <a href="index.html#contact">Contact</a>
+    </nav>
+    <div id="game-background" class="dynamic-game-bg"></div>
+
+    <div class="game-container">
+        <div class="game-header">
+            <h1 id="game-title" style="color: var(--primary-accent); font-size: 3rem;">Loading...</h1>
+            <a id="game-link" href="#" class="play-button" target="_blank">
+                <button>Play Game</button>
+            </a>
+        </div>
+
+        <p id="game-desc"></p>
+
+        <div class="contributions-section">
+            <h3>Personal Contributions</h3>
+            <ul id="game-roles" class="contributions-list">
+                </ul>
+        </div>
+
+        
+
+        <h2>Visual Records</h2>
+        <div id="game-gallery" class="gallery-grid">
+            </div>
+            <br>
+            <h2>Info</h2>
+            <p id="game-info"></p>
+    </div>
+    <div id="lightbox">
+        <span id="lightbox-close">X</span>
+        <img id="lightbox-img" src="" alt="Fullscreen Schematic">
+    </div>
+
+    
+    <script>
+        const gameDatabase = {
+            "mariana": {
+                title: "Mariana",
+                description: "You are dropped into an unknown trench to explore. You will find fantastical creatures and rare artifacts. Fight bosses and mini-bosses in order to dive as deep as possible and uncover the mystery of the trench.",
+                link: "https://store.steampowered.com/app/3197400/Mariana/",
+                roles: [
+                    "Solo game designer and programmer",
+                    "Almost every art asset",
+                    "Music and sound design"
+                ],
+                gallery: [
+                    "static/Gamephotos/mariana/mariana-screenshot-1.jpg",
+                    "static/Gamephotos/mariana/mariana-screenshot-2.png",
+                    "static/Gamephotos/mariana/mariana-screenshot-3.png",
+                    "static/Gamephotos/mariana/mariana-screenshot-4.png",
+                    "static/Gamephotos/mariana/mariana5.png",
+                    "static/Gamephotos/mariana/mariana6.gif",
+                    "static/Gamephotos/mariana/mariana7.png",
+                    "static/Gamephotos/mariana/mariana-screenshot-5.png"
+                ],
+                bgImage: "static/Gamephotos/mariana/MarianaLibraryHeroSide.png",
+                info: "Mariana was my highschool dream game that I created over the course of 3 years while studying computer science at the University of Nebraska-Lincoln.\n\n I coded Mariana by hand from the ground up to learn gamemaker. The goal was to make a juicy feeling underwater metrovoidvania game that showcases deep sea gigantism.\n\nPersonally I love deep sea gigantism. I love the Magnapinna Squid(what the main squid is based on) and the mystery behind it. I made this game because I was passionate about the topic and I wanted my game idea to come to life. I wanted it to feel good to play and be fun. I wanted to make people feel the awe I felt when learning about deep sea creatures."
+            },
+            "alien-collector": {
+                title: "Alien Collector",
+                description: "Decorate a space station with 3D printed furniture and props. Aliens will come to visit your station and will offer you 3D printing scrap as an offering to trade for your cows.",
+                link: "https://play.google.com/store/apps/details?id=com.SkyMavisGann.AlienCollector&utm_source=na_Med",
+                roles: [
+                    "Developed all gameplay features and designs",
+                    "Artwork, sound and music",
+                    "Production and app distribution"
+                ],
+                gallery: [
+                    "static/Gamephotos/alien-screenshot1.webp",
+                    "static/Gamephotos/alien-screenshot3.webp",
+                    "static/Gamephotos/alien-screenshot4.webp",
+                    "static/Gamephotos/alien-screenshot2.webp"
+                ],
+                bgImage: "static/Gamephotos/alien-screenshot3.webp",
+                info: "I made Alien collector when I was president of the University of Nebraska-Lincoln Game Dev Club. I was the programmer designer, and composer. From the club and my friends I have a team of artists help me with some of the assets, some assets were also drawn by me.\n\nAlien Collector was my first mobile game in Unity and I decided to stick with google play since it is free and has no microtransitions I have the funding to put the game on the apple play store."
+            },
+            "ripple-effects": {
+                title: "Ripple Effects",
+                description: "Explore diverse locations throughout Aquaville, where each area presents unique challenges and scenarios. As you navigate the town, you'll have the opportunity to harness resources and craft innovative policies that can transform Aquaville's future. Get ready to dive in, make strategic decisions, and witness how your actions create ripple effects that shape a sustainable community.",
+                link: "https://rippleeffectsgame.com/",
+                roles: [
+                    "Senior Developer and design consultant",
+                    "Developed all core features in unity",
+                    "Music and sound design"
+                ],
+                gallery: [
+                    "static/Gamephotos/RippleEffectsScreenshot1.png",
+                    "static/Gamephotos/ripple1.gif",
+                    "static/Gamephotos/ripple2.gif",
+                    "static/Gamephotos/ripple5.gif",
+                    "static/Gamephotos/ripple6.gif",
+                    "static/Gamephotos/ripple4.png",
+                    "static/Gamephotos/ripple3.png"
+                ],
+                bgImage: "static/Gamephotos/Ripplebackground.png",
+                info: "Ripple effects is the first commerical game that I was the Senior Developer for. I was recruited by Cultivate Access a group part of the University of Nebraska-Lincoln Agriculture Department. I have had a hand in making every feature in this game. While the design and core gameplay features were given to me and my team by cultivate access I was allowed to consult and make large design choices with the team. \n\nI organized playtests with our target audience at our local highchools and managed my team to make a more perfect product. The game is finished but is still being updated by the team this year. We are currently working on training understudies to take over after we are gone."
+            },
+            "powow-bound": {
+                title: "Powow Bound: A menominee homecoming",
+                description: "Experience the story of a Menominee family reconnecting with their tribal culture and language through the lens of the Menominee Annual Contest Powwow.",
+                link: "https://store.steampowered.com/app/3778870/Powwow_Bound_A_Menominee_Homecoming/",
+                roles: [
+                    "Accessibility features such as screen reader and keyboard controls",
+                    "Background Npc behavior trees and spawning",
+                    "Screen effects such as fading and title cards interworking with Twine"
+                ],
+                gallery: [
+                    "static/Gamephotos/Menom1.jpg",
+                    "static/Gamephotos/Menom2.gif",
+                    "static/Gamephotos/Menom3.jpg",
+                    "static/Gamephotos/Menom4.jpg"
+                ],
+                bgImage: "static/Gamephotos/MenomBackdrop.jpg",
+                info: "Powow Bound was the first game I worked on when I started at Nebraska Public Media. They gave me the task of background NPCs first. I produced to finish it so fast they had to raise the scope of the background npcs to interact with eachother.\n\n Powow Bound is a game made in unity which is my most well known engine as of 2026. It was dificult to get started on a project that was already a year into developement but I figured it out fast."
+            },
+            "civics-scribble": {
+                title: "Civics Scribble",
+                description: "Join Mr. Apple on a cross-country road trip across the USA! Draw lines to roll, bounce, and teleport through 9 unique worlds. Solve tricky puzzles, get to know Mr. Apple’s quirky cousins, and learn something new about civics. Feeling creative? Use Construction Mode to bulldoze or build a new path.",
+                link: "https://store.steampowered.com/app/3793300/Civics_Scribble/",
+                roles: [
+                    "Special effects design and development",
+                    "Implemented features in an unfamiliar already designed product",
+                    "Developed Level editor mode"
+                ],
+                gallery: [
+                    "static/Gamephotos/civics-screenshot1.gif",
+                    "static/Gamephotos/civics-screenshot3.gif",
+                    "static/Gamephotos/civics-screenshot4.gif",
+                    "static/Gamephotos/civics-screenshot5.gif",
+                    "static/Gamephotos/civics-screenshot2.gif"
+                ],
+                bgImage: "static/Gamephotos/CivicsScribblebackdrop.jpg",
+                info: "Civics Scribble was already a year into developement when I was recruited onto the project. I began with implmenting some particle and effects work because Nebraska Public media liked my visual effects in Powow Bound.\n\n I also began work on the level editor they were developing, making the selection tool and the move rotate and delete functions for the tilemap movable objects in theh game. The more difficult task was making a system to implement moving platforms into the level editor. This required me to invent the \"Moving Platform Wizard\". That took the user step by step to making a moving platform and the settings it took it make it."
+            },
+            "object-imperm": {
+                title: "Object Impermanence",
+                description: "Object Impermanence is a VR dungeon crawler utilizing Non-Euclidean Geometry tricks and puzzles. You explore a dungeon full of mysterious and weird artifacts which you can sell to buy weapons and tools. But beware there are creatures that lurk in the dark. In order to leave the dungeon alive you'll have to find the final boss and defeat him.",
+                link: "https://skymavisgann.itch.io/object-impermanence",
+                roles: [
+                    "Lead developer for this VR game",
+                    "Implemented grabbable backpack to hold items",
+                    "Created Non euclidean procedural generating dungeon"
+                ],
+                gallery: [
+                    "static/Gamephotos/ObjectImperm-screenshot-1.jpg",
+                    "static/Gamephotos/ObjectImperm-screenshot-2.jpg",
+                    "static/Gamephotos/ObjectImperm-screenshot-3.jpg"
+                ],
+                bgImage: "static/Gamephotos/ObjectImperm-screenshot-3.jpg",
+                info: ""
+            }
+        };
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameId = urlParams.get('id');
+
+        // Check if the game exists in our database
+        if (gameId && gameDatabase[gameId]) {
+            const data = gameDatabase[gameId];
+
+            // Inject Text
+            document.getElementById('game-title').innerText = data.title;
+            document.getElementById('game-desc').innerText = data.description;
+            document.getElementById('game-link').href = data.link;
+            document.getElementById('game-info').innerText = data.info;
+            document.getElementById('game-background').style.backgroundImage = `url('${data.bgImage}')`;
+
+
+            // Inject Roles
+            const rolesContainer = document.getElementById('game-roles');
+            data.roles.forEach(role => {
+                let li = document.createElement('li');
+                li.innerText = role;
+                rolesContainer.appendChild(li);
+            });
+
+            // Inject Gallery Images
+            const galleryContainer = document.getElementById('game-gallery');
+            data.gallery.forEach(imagePath => {
+                let img = document.createElement('img');
+                img.src = imagePath;
+                img.className = "gallery-img";
+                
+                // Add a hover effect so the user knows it's clickable
+                img.style.cursor = "zoom-in"; 
+                
+                galleryContainer.appendChild(img);
+            });
+
+            // --- NEW LIGHTBOX LOGIC ---
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            
+            // 1. Grab all the images we just created
+            const galleryImages = document.querySelectorAll('.gallery-img');
+
+            // 2. Loop through them and add a click listener
+            galleryImages.forEach(img => {
+                img.addEventListener('click', () => {
+                    // Copy the source of the clicked image into the massive lightbox image
+                    lightboxImg.src = img.src; 
+                    
+                    // Turn on the CSS fade-in
+                    lightbox.classList.add('active'); 
+                });
+            });
+
+            // 3. Close the lightbox if they click anywhere on the dark background
+            lightbox.addEventListener('click', () => {
+                lightbox.classList.remove('active');
+                
+                // Optional memory cleanup: clear the image source after the fade-out finishes
+                setTimeout(() => {
+                    lightboxImg.src = "";
+                }, 300);
+            });
+
+        } else {
+            // Error handling if someone types a bad URL
+            document.getElementById('game-title').innerText = "Schematic Not Found";
+            document.getElementById('game-desc').innerText = "The requested data block has been corrupted or does not exist.";
+            document.getElementById('game-link').style.display = "none";
+            document.querySelector('.contributions-section').style.display = "none";
+        }
+    </script>
+
+
+</body>
+</html>

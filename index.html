@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky Mavis Gann Portfolio</title>
+    <link rel="stylesheet" href="static/styles.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        /* --- Floating Audio Prompt --- */
+        #audio-prompt {
+            /* 1. THE HOVER FIX */
+            position: fixed; /* Rips it out of the document flow so it floats */
+            z-index: 9999; /* Guarantees it sits above absolutely everything else */
+            
+            /* 2. THE CENTERING FIX */
+            bottom: 40px; 
+            left: 50%; /* Moves the left edge of the text to the exact middle of the screen */
+            transform: translateX(-50%); /* Pulls it back to the left by half its own width to perfectly center it */
+            
+            /* 3. YOUR STYLING */
+            color: var(--primary-accent); 
+            font-family: 'RainyHearts', sans-serif; 
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            pointer-events: none; 
+            
+            /* 4. THE ANIMATION LINK */
+            animation: pulse-fade 2s infinite ease-in-out;
+            transition: opacity 0.5s ease-out;
+        }
+
+        /* The infinite pulse keyframes */
+        @keyframes pulse-fade {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        /* The class we will add in JavaScript to make it disappear */
+        #audio-prompt.hidden {
+            opacity: 0;
+        }
+        nav {
+            position: relative; /* Must be relative, fixed, or absolute for z-index to work */
+            z-index: 99999; /* Forces the nav above all rafter and gear hitboxes */
+        }
+        .hero-section {
+            
+            background-image: url('static/billboard2.png');
+            background-size: auto 102%;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            overflow-y: visible;
+            overflow-x: visible;
+            
+            padding: 6rem 1rem;
+            padding-left: 15%;
+            padding-right: 15%;
+            
+            
+            max-width: 1000px;
+            max-height: auto;
+            margin: 0 auto;
+            margin-top: 10px;
+            position: relative; 
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+    .hero-section::before {
+        content: "";
+        position: absolute;
+        
+        /* Center it perfectly behind the hero content */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        
+        /* Force it to span the entire monitor screen */
+        width: 100vw; 
+        height: 150px; /* Adjust to the physical height of your sprite */
+        
+        background-image: url('static/Gate.png'); /* Swap for your image */
+        background-repeat: repeat-x; /* Tiles horizontally across the screen */
+        background-size: auto 100%; /* Keeps the pixel art correctly scaled */
+        
+        image-rendering: pixelated;
+        z-index: -1; /* Shoves it behind the profile pic and bio */
+    }
+        /* --- NEW: MODULAR RAFTER & BILLBOARD HEADERS --- */
+        .rafter-header {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 4rem 0 2rem 0; /* Spacing above and below the billboard */
+            padding: 1rem 0;
+        }
+
+        /* The Full-Width Beam */
+        .rafter-header::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100vw;
+            height: 80px; /* Make this slightly thinner than the hero beam */
+            background-image: url('static/GateSmall.png'); 
+            background-repeat: repeat-x;
+            background-size: auto 100%;
+            image-rendering: pixelated;
+            z-index: -1;
+        }
+
+        /* The Billboard Panel */
+        .billboard-sign {
+            background-image: url('static/bluePanelLong.png');
+            background-size: 100% 100%; /* Stretches the panel to fit the text exactly */
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 1.5rem 4rem;
+            color: var(--primary-accent);
+            font-family: 'RainyHearts', sans-serif;
+            text-transform: uppercase;
+            text-shadow: 0 4px 0 rgba(0,0,0,0.8); /* Heavy industrial shadow */
+            image-rendering: pixelated;
+            text-align: center;
+        }
+
+        /* Adjust font sizes based on if it's a main section or subsection */
+        .billboard-sign h2 { font-size: 3.5rem; letter-spacing: 2px; }
+        .billboard-sign h3 { font-size: 2.5rem; letter-spacing: 1px; }
+        /* ----------------------------------------------- */
+
+        #aboutme {
+            background-size: 200px 100px;
+        }
+        #aboutBillboard .aboutParagraph {
+            font-family: sans-serif;
+            font-size: large;
+            color: white;
+            text-transform: none;
+            
+            text-align: center; 
+            align-content: center;
+        }
+
+        /* --- Interlocking Gear Demonstration --- */
+        .gear-system {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .gear {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            /* Using a placeholder image - replace with your single static gear sprite */
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Gear_icon_black.svg/200px-Gear_icon_black.svg.png');
+            background-size: cover;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        /* Offset the second gear slightly so the teeth mesh */
+        .gear.secondary {
+            width: 60px;
+            height: 60px;
+            margin-left: -15px; /* Pulls it into the first gear */
+            transform: rotate(15deg); /* Offsets the starting angle to fit the teeth */
+        }
+
+
+
+
+        .rafter-header-contact {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 4rem 0 2rem 0; /* Spacing above and below the billboard */
+            padding: 1rem 0;
+        }
+
+        /* The Full-Width Beam */
+        .rafter-header-contact::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100vw;
+            height: 180px; /* Make this slightly thinner than the hero beam */
+            background-image: url('static/Gate.png'); 
+            background-repeat: repeat-x;
+            background-size: auto 100%;
+            image-rendering: pixelated;
+            z-index: -1;
+        }
+
+        /* --- 2. THE CONTACT PANEL --- */
+        .contact-panel {
+            background-image: url('static/bluePanelLong.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            
+            /* Sizing and Centering */
+            max-width: 900px;
+            margin: 0 auto 4rem auto;
+            padding: 3rem 4rem;
+            
+            /* Flexbox layout to put links on left, message form on right */
+            display: flex;
+            flex-wrap: wrap; 
+            gap: 4rem;
+            
+            color: white;
+            font-family: 'RainyHearts', sans-serif;
+            image-rendering: pixelated;
+            position: relative;
+            z-index: 2;
+        }
+
+        .contact-links {
+            flex: 1; /* Takes up half the billboard */
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            min-width: 250px;
+        }
+
+        .social-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.8rem;
+            text-shadow: 0 4px 0 rgba(0,0,0,0.8);
+            text-decoration: none;
+            color: white;
+            transition: transform 0.2s, color 0.2s;
+        }
+
+        /* Interactive hover effect for the links */
+        .social-row:hover {
+            transform: translateX(10px);
+            color: var(--primary-accent); 
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            image-rendering: pixelated;
+            /* Optional: Adds a dark background box to icons so they pop */
+            background-color: rgba(0,0,0,0.4);
+            border-radius: 4px;
+            padding: 4px;
+        }
+
+        /* The Blueprint Placeholder for the future message sender */
+        .message-placeholder {
+            flex: 1; /* Takes up the other half */
+            min-width: 300px;
+            
+            /* Blueprint styling */
+            border: 2px dashed rgba(255, 255, 255, 0.4);
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            text-shadow: 0 2px 0 rgba(0,0,0,0.8);
+        }
+
+        .message-placeholder h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-accent);
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- audio stuff -->
+    <audio id="gear-sound" src="static/sounds/Click.mp3" preload="auto"></audio>
+    <audio id="phumatic-sound" src="static/sounds/industrialPhumatics.mp3" preload="auto"></audio>
+    <audio id="phumaticRel-sound" src="static/sounds/release.mp3" preload="auto"></audio>
+    <div id="audio-prompt">Click anywhere to enable sound</div>
+    
+    <nav>
+        <a href="index.html#aboutme">About</a>
+        <a href="index.html#published-games">Games</a>
+        <a href="index.html#contact">Contact</a>
+    </nav>
+
+    
+    <div class="top-gear-container">
+        <div class="gear scroll-gear-1" style="background-image: url('static/GearBig.png');
+        right: -100px;
+        bottom: -50px;
+        z-index: 1001;"></div>
+        <div class="gear scroll-gear-2" style="background-image: url('static/GearBig.png');
+        right: -20px;
+        bottom: 0px; 
+        z-index: 1000; "></div>
+    </div>
+    <section id="about" class="hero-section">
+
+        <div class="hero-text">
+            <h1 id="main-title">Sky Mavis Gann</h1>
+            <p style="text-align: center;">Game Programmer and Designer</p>
+        </div>
+
+       
+    </section>
+
+    <section id = "aboutme">
+         <div class="rafter-header">
+            <div id = "aboutBillboard" class="billboard-sign" style="background-image: url('static/billboardMini.png'); max-width: 500px;">
+                <h2>About Me</h2>
+                <div class ="aboutParagraph">
+                    <p>I'm a game programmer and designer with 2 years of professional experience in platforms like unity, gamemaker, and godot.</p>
+                    <br>
+                    <p>I've worked as the lead developer in projects such as the University of Nebraska-Lincoln's Ripple Effects and as an additional programmer at Nebraska public Media for games like Powow Bound and Civics Scribble.</p>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+<section id="published-games">
+        
+        <div class="rafter-header">
+            <div class="billboard-sign">
+                <h2>Published Games</h2>
+            </div>
+            
+        </div>
+
+        <div class="rafter-header">
+            <div class="billboard-sign">
+                <h3>Commercial Work</h3>
+            </div>
+            <div class="top-gear-container">
+                <div class="gear scroll-gear-1" style="background-image: url('static/GearBig.png');
+                    right: -100px;
+                    bottom: 0px;
+                    z-index: 1001;">
+                </div>
+                
+            </div>
+        </div>
+        
+        <div class="projects-grid">
+
+            
+            <a href="game.html?id=ripple-effects" style="text-decoration: none; color: inherit;" class="piston-card-wrapper">
+
+                
+                <div class="piston-sprite"></div>
+                <div class="pistonGear-sprite"></div>
+
+                <div class="piston-spriteRight"></div>
+                <div class="pistonGear-spriteRight"></div>
+                <div class="card product-card">
+                    <h3>Ripple Effects</h3>
+                    <p class="line-clamp-2">Lead Developer | University of Nebraska-Lincoln Ag Department</p>
+                    <img src="static/Gamephotos/RippleEffectBanner.png" alt="Ripple Effect Photo">
+                </div>
+            </a>
+            <a href="game.html?id=powow-bound" style="text-decoration: none; color: inherit;" class="piston-card-wrapper">
+                <div class="piston-sprite"></div>
+                <div class="pistonGear-sprite"></div>
+
+                <div class="piston-spriteRight"></div>
+                <div class="pistonGear-spriteRight"></div>
+                
+                <div class="card product-card">
+                    <h3>Powwow Bound</h3>
+                    <p class="line-clamp-2">Programmer | Nebraska Public Media</p>
+                    <img src="static/Gamephotos/PowowBound.jpg" alt="Powwow Bound Photo">
+                </div>
+            </a>
+            <a href="game.html?id=civics-scribble" style="text-decoration: none; color: inherit;" class="piston-card-wrapper">
+
+                <div class="piston-sprite"></div>
+                <div class="pistonGear-sprite"></div>
+
+                <div class="piston-spriteRight"></div>
+                <div class="pistonGear-spriteRight"></div>
+                <div class="card product-card">
+                    <h3>Civics Scribble</h3>
+                    <p class="line-clamp-2">Programmer | Nebraska Public Media</p>
+                    <img src="static/Gamephotos/CivicsScribbleBanner.jpg" alt="Civics Scribble Photo">
+                </div>
+            </a>
+        </div>
+
+        <div class="rafter-header">
+            <div class="billboard-sign">
+                <h3>Solo Projects</h3>
+            </div>
+            <div class="top-gear-container">
+                <div class="gear scroll-gear-1" style="background-image: url('static/GearBig.png');
+                    right: -100px;
+                    bottom: 0px;
+                    z-index: 1001;">
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="projects-grid">
+            <a href="game.html?id=mariana" style="text-decoration: none; color: inherit;" class="piston-card-wrapper">
+
+                <div class="piston-sprite"></div>
+                <div class="pistonGear-sprite"></div>
+
+                <div class="piston-spriteRight"></div>
+                <div class="pistonGear-spriteRight"></div>
+                <div class="card product-card">
+                    <h3>Mariana</h3>
+                    <p class="line-clamp-2">Solo Developer</p>
+                    <img src="static/Gamephotos/MarianaBanner.png" alt="Mariana Photo">
+                </div>
+            </a>
+            <a href="game.html?id=alien-collector" style="text-decoration: none; color: inherit;" class="piston-card-wrapper">
+
+                <div class="piston-sprite"></div>
+                <div class="pistonGear-sprite"></div>
+
+                <div class="piston-spriteRight"></div>
+                <div class="pistonGear-spriteRight"></div>
+                <div class="card product-card">
+                    <h3>Alien Collector</h3>
+                    <p class="line-clamp-2">Solo Developer | UNL Game Dev Club</p>
+                    <img src="static/Gamephotos/AlienCollectorBanner.png" alt="Alien Collector Photo">
+                </div>
+            </a>
+        </div>
+    </section>
+    <section id="contact">
+        
+        <div class="rafter-header">
+            <div class="billboard-sign">
+                <h2>Contact Me</h2>
+            </div>
+        </div>
+        <div class="rafter-header-contact">
+            <div class="contact-panel">
+            
+                <div class="contact-links">
+                    <a href="https://github.com/SkyMavisGann" target="_blank" class="social-row">
+                        <img src="static/icons/github.png" alt="GitHub" class="social-icon">
+                        <span>GitHub</span>
+                    </a>
+                    
+                    <a href="https://linkedin.com/in/sky-gann-48aab43a7" target="_blank" class="social-row">
+                        <img src="static/icons/linkedin.png" alt="LinkedIn" class="social-icon">
+                        <span>Linkedin</span>
+                    </a>
+                    
+                    <a href="https://instagram.com/SkyMavisGann" target="_blank" class="social-row">
+                        <img src="static/icons/instagram.png" alt="Instagram" class="social-icon">
+                        <span>Instagram</span>
+                    </a>
+
+                    <a href="mailto:skymavisgann@gmail.com" class="social-row">
+                        <img src="static/icons/gmail.png" alt="Email" class="social-icon">
+                        <span>Gmail</span>
+                    </a>
+                </div>
+
+                <div class="message-placeholder">
+                    <h3>Direct Messaging</h3>
+                    <p style="font-size: 1.2rem; line-height: 1.5; opacity: 0.8;">
+                        [ Transmission Interface Offline ]<br><br>
+                        Awaiting logic module installation. Please use the Direct Ping option to the left to establish a connection.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+        
+    </section>
+    <section id="other-projects">
+        
+        <div class="rafter-header">
+            <div class="billboard-sign">
+                <h2>Other Projects</h2>
+            </div>
+        </div>
+        
+        <div class="projects-grid">
+            <a href="game.html?id=object-imperm" style="text-decoration: none; color: inherit;" class="piston-card-wrapper">
+
+                <div class="piston-sprite"></div>
+                <div class="pistonGear-sprite"></div>
+
+                <div class="piston-spriteRight"></div>
+                <div class="pistonGear-spriteRight"></div>
+                <div class="card product-card">
+                    <h3>Object Impermanence</h3>
+                    <p class="line-clamp-2">Solo Developer | UNL Virtual Reality Course</p>
+                    <img src="static/Gamephotos/ObjectImpermLogo.png" alt="Object Impermanence Photo">
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <div class="parallax-container">
+        <div class="parallax-layer" data-speed="0.05" style="background-image: url('static/FreeIndustrialZoneTileset/2Background/1.png');"></div>
+        
+        <div class="parallax-layer" data-speed="0.1" style="background-image: url('static/FreeIndustrialZoneTileset/2Background/2.png');"></div>
+        
+        <div class="parallax-layer" data-speed="0.15" style="background-image: url('static/FreeIndustrialZoneTileset/2Background/3.png');"></div>
+        
+        <div class="parallax-layer" data-speed="0.2" style="background-image: url('static/FreeIndustrialZoneTileset/2Background/4.png');"></div>
+        
+        <div class="parallax-layer" data-speed="0.3" style="background-image: url('static/FreeIndustrialZoneTileset/2Background/5.png');"></div>
+    </div>
+
+    <div class="bottom-gear-container">
+        <div class="gear scroll-gear-1" style="background-image: url('static/GearBig.png');
+        right: -100px;
+        bottom: 0px;
+        z-index: 1001;"></div>
+        <div class="gear scroll-gear-2" style="background-image: url('static/GearBig.png');
+        right: -20px;
+        bottom: -50px; 
+        z-index: 1000; "></div>
+    </div>
+<script>
+    
+    //sounds
+    const audioPrompt = document.getElementById('audio-prompt');
+    const gearSound = document.getElementById('gear-sound');
+    const phumaticSound = document.getElementById('phumatic-sound');
+     const phumaticRelSound = document.getElementById('phumaticRel-sound');
+    let audioUnlocked = false;
+
+    window.addEventListener('click', () => {
+        audioUnlocked = true;
+        if (audioPrompt) {
+            audioPrompt.classList.add('hidden');
+            
+            // Optional cleanup: Physically remove the element from the webpage 
+            // after the 0.5s CSS transition finishes so it doesn't just sit there invisible
+            setTimeout(() => {
+                audioPrompt.style.display = 'none';
+            }, 500);
+        }
+    }, { once: true });
+    
+
+
+    // 1. Target both gears using their specific classes
+    const gear1 = document.querySelectorAll('.scroll-gear-1');
+    const gear2 = document.querySelectorAll('.scroll-gear-2');
+    const parallaxLayers = document.querySelectorAll('.parallax-layer');
+
+    let lastClickAngle = 0;
+    const clickThreshold = 15;
+    // Listen for the scroll event
+    window.addEventListener('scroll', () => {
+        let scrollPosition = window.scrollY;
+        let speed = 0.5; 
+        let currentAngle = scrollPosition * speed;
+        //- PARALLAX LOGIC ---
+        let maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+
+        // 2. Normalize the scroll into a percentage from 0.0 (top) to 1.0 (bottom)
+        // Adding a tiny safety check (|| 1) so we don't divide by zero if the page is too short
+        let scrollPercent = scrollPosition / (maxScroll || 1); 
+
+        parallaxLayers.forEach(layer => {
+            let parallaxSpeed = parseFloat(layer.getAttribute('data-speed'));
+            
+            // 3. Calculate the absolute max distance this layer is allowed to move.
+            // E.g., speed 0.3 means it will move exactly 30% of the screen height.
+            let maxTranslate = window.innerHeight * parallaxSpeed;
+            
+            // 4. Lerp the movement based on your scroll percentage!
+            let yOffset = -(scrollPercent * maxTranslate);
+            
+            layer.style.transform = `translateY(${yOffset}px)`;
+        });
+
+        // Apply the rotation
+        gear1.forEach(element => {
+            if (element) {
+            element.style.transform = `rotate(${scrollPosition * speed}deg)`;
+            if (audioUnlocked) {
+                
+            }
+        }
+        });
+        gear2.forEach(element => {
+            if (element) {
+                element.style.transform = `rotate(${-scrollPosition * speed}deg)`;
+            }
+        });
+
+        if (Math.abs(currentAngle - lastClickAngle) >= clickThreshold) {
+            if (audioUnlocked) {
+                // Play the sound ONCE, not per-gear
+                playSoundWithPitch(gearSound, randomNumberBetween(0.8, 1.2));
+            }
+            // Update the last clicked angle to our current position
+            lastClickAngle = currentAngle;
+        }
+
+    });
+
+        /**
+     * Plays an HTML audio element at a specific pitch.
+     * @param {HTMLAudioElement} audioObject - The audio element to play
+     * @param {number} pitch - The pitch/speed multiplier (1.0 is normal, 0.8 is lower, 1.2 is higher)
+     */
+    function playSoundWithPitch(audioObject, pitch) {
+        // 1. Reset the sound to the beginning in case it's already playing
+        audioObject.currentTime = 0;
+        
+        // 2. Disable the browser's automatic pitch correction
+        audioObject.preservesPitch = false; 
+        
+        // 3. Set the playback rate (this now acts exactly like a game engine pitch slider)
+        audioObject.playbackRate = pitch;
+        
+        // 4. Fire the sound
+        audioObject.play();
+    }
+    function randomNumberBetween(min, max) {
+        return  (Math.random() * (max - min)) + min;
+    }
+
+
+    const pistonCards = document.querySelectorAll('.piston-card-wrapper');
+
+    pistonCards.forEach(card => {
+
+        card.addEventListener('mouseenter', () => {
+            playSoundWithPitch(phumaticSound, randomNumberBetween(0.95, 1.05));
+        });
+
+        card.addEventListener('mouseleave', () => {
+            playSoundWithPitch(phumaticRelSound, randomNumberBetween(0.95, 1.05));
+        });
+    });
+</script>
+</body>
+</html>
