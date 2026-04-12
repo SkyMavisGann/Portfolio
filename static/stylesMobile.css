@@ -48,10 +48,11 @@
     /* 4. Shrink the Cards so the Pistons stay on screen */
     .piston-card-wrapper {
         max-width: 250px; /* Shrinks the card so the 96px side pistons have room */
+        transform: scale(0.6);
     }
     .card {
     width: 100%;
-    min-width: 300px;
+    min-width: 400px;
     padding: 30px 30px;
 }
     .projects-grid img {
