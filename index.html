@@ -298,7 +298,7 @@
             color: var(--primary-accent);
         }
     </style>
-    <link rel="stylesheet" href="static/stylesMobile.css">
+    <link rel="stylesheet" href="static/stylesMobile.css?v=1.1">
 </head>
 <body>
     
@@ -667,6 +667,46 @@
         card.addEventListener('mouseleave', () => {
             playSoundWithPitch(phumaticRelSound, randomNumberBetween(0.95, 1.05));
         });
+    });
+
+        // --- SENSOR TRIPWIRE FOR MOBILE (AND DESKTOP) SCROLLING ---
+
+    // 1. Set up the tripwire logic
+    const pistonObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            // If the card has entered the middle of the screen...
+            if (entry.isIntersecting) {
+                // Check if it already fired so we don't spam the audio
+                if (!entry.target.classList.contains('is-visible')) {
+                    entry.target.classList.add('is-visible');
+                    
+                    // Fire the extending sound!
+                    if (audioUnlocked) {
+                        playSoundWithPitch(phumaticSound, randomNumberBetween(0.95, 1.05));
+                    }
+                }
+            } else {
+                // If the card leaves the screen, retract it
+                if (entry.target.classList.contains('is-visible')) {
+                    entry.target.classList.remove('is-visible');
+                    
+                    // Fire the retracting sound!
+                    if (audioUnlocked) {
+                        playSoundWithPitch(phumaticRelSound, randomNumberBetween(0.95, 1.05));
+                    }
+                }
+            }
+        });
+    }, {
+        // The "Tripwire Zone" - triggers when the card is 20% visible on screen
+        threshold: 0.2, 
+        // Triggers slightly closer to the center of the viewport
+        rootMargin: "-10% 0px -10% 0px" 
+    });
+
+    // 2. Attach the tripwire to every single piston card on the page
+    pistonCards.forEach(card => {
+        pistonObserver.observe(card);
     });
 </script>
 </body>
