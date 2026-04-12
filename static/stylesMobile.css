@@ -76,4 +76,8 @@
     .piston-card-wrapper:not(:hover):not(.is-visible) .pistonGear-spriteRight {
         animation: spin-counterclockwisePistonRight 0.4s linear forwards;
     }
+
+    ::-webkit-scrollbar {
+    width: 0px; /* Make it wide enough to fit your sprite */
+}
 }
