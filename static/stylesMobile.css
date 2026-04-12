@@ -11,16 +11,8 @@
     }
     
 
-    .parallax-layer {
-        /* 'cover' forces the background to be tall enough to fill the phone */
-        background-size: cover !important; 
-        
-        /* Centers the most interesting part of the background */
-        background-position: center !important; 
-        
-        /* Stop it from repeating, since cover handles the sizing */
-        background-repeat: no-repeat !important; 
-    }
+    
+
     html, body {
         background-color: #1a1a1a; /* Prevents any default white from bleeding through */
     }
