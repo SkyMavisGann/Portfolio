@@ -9,19 +9,22 @@
         margin: 0;
         padding: 0;
     }
-    /* 1. Fix the White Gap */
-    /* Mobile browsers have a collapsing URL bar that messes up '100vh'. 
-       '100svh' tells it to strictly use the small viewport. */
-    .parallax-container {
-        height: 100svh; 
+.parallax-container {
+        /* We make the container 20% taller than the phone screen... */
+        height: 120vh; 
+        /* ...and pull it up 10%. This hides the URL bar size changes! */
+        top: -10vh; 
     }
-
+    
     .parallax-layer {
-        /* Force it to fill the width of the phone, and let the height adjust automatically */
-        background-size: 100% auto !important; 
+        /* 'cover' forces the background to be tall enough to fill the phone */
+        background-size: cover !important; 
         
-        /* Tell it to repeat both horizontally and vertically so it fills the tall screen */
-        background-repeat: repeat !important; 
+        /* Centers the most interesting part of the background */
+        background-position: center !important; 
+        
+        /* Stop it from repeating, since cover handles the sizing */
+        background-repeat: no-repeat !important; 
     }
     html, body {
         background-color: #1a1a1a; /* Prevents any default white from bleeding through */
