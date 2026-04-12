@@ -9,12 +9,7 @@
         margin: 0;
         padding: 0;
     }
-.parallax-container {
-        /* We make the container 20% taller than the phone screen... */
-        height: 120vh; 
-        /* ...and pull it up 10%. This hides the URL bar size changes! */
-        top: -10vh; 
-    }
+    
 
     .parallax-layer {
         /* 'cover' forces the background to be tall enough to fill the phone */
