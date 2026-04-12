@@ -12,9 +12,7 @@
 
     
 
-    html, body {
-        background-color: #1a1a1a; /* Prevents any default white from bleeding through */
-    }
+
 
 
     .billboard-sign h2 { font-size: 2rem; }
