@@ -8,6 +8,25 @@
     }
     
 
+    .parallax-container {
+        /* We make the container 20% taller than the phone screen... */
+        height: 120vh; 
+        /* ...and pull it up 10%. This hides the URL bar size changes! */
+        top: -10vh; 
+    }
+    
+    /* 2. Fix the Grey Screen */
+    .parallax-layer {
+        /* 'cover' forces the background to be tall enough to fill the phone */
+        background-size: cover !important; 
+        
+        /* Centers the most interesting part of the background */
+        background-position: center !important; 
+        
+        /* Stop it from repeating, since cover handles the sizing */
+        background-repeat: no-repeat !important; 
+    }
+
     
 
     html, body {
