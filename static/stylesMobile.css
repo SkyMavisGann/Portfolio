@@ -4,7 +4,7 @@
 @media (max-width: 768px) {
     html, body {
         overflow-x: hidden !important;
-        
+
         width: 100%;
         margin: 0;
         padding: 0;
@@ -49,6 +49,11 @@
     .piston-card-wrapper {
         max-width: 250px; /* Shrinks the card so the 96px side pistons have room */
     }
+    .card {
+    width: 100%;
+    min-width: 300px;
+    padding: 30px 30px;
+}
     .projects-grid img {
         width: 100%; /* Ensures the screenshot fits inside the newly shrunk card */
     }
