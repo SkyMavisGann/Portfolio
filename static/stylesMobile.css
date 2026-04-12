@@ -2,12 +2,26 @@
    MOBILE OVERRIDES (Max Width 768px)
 ========================================= */
 @media (max-width: 768px) {
-    
+    html, body {
+        overflow-x: hidden !important;
+        max-width: 100vw;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
     /* 1. Fix the White Gap */
     /* Mobile browsers have a collapsing URL bar that messes up '100vh'. 
        '100svh' tells it to strictly use the small viewport. */
     .parallax-container {
         height: 100svh; 
+    }
+
+    .parallax-layer {
+        /* Force it to fill the width of the phone, and let the height adjust automatically */
+        background-size: 100% auto !important; 
+        
+        /* Tell it to repeat both horizontally and vertically so it fills the tall screen */
+        background-repeat: repeat !important; 
     }
     html, body {
         background-color: #1a1a1a; /* Prevents any default white from bleeding through */
@@ -41,7 +55,7 @@
     /* Shrink the gear containers so they don't block the screen */
     .top-gear-container, .bottom-gear-container {
         transform: scale(0.6);
-        transform-origin: right edge;
+        transform-origin: right center; /* This is the correct mechanical term */
     }
 
     /* Hovering ON OR Scrolled Into View (Piston Extends) */
